@@ -80,42 +80,63 @@ open class CoreTableDataSource<Table>: FetchedResultsControllerDataSource<Table.
 		return (range: range, rowType: currentRowType, values: values)
 	}
 
-	// MARK: - NSFetchedResultsControllerDelegate methods
-	/*
-	open override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-	table.endUpdates()
+	struct TableChanges {
+		var deletes = [IndexPath]()
+		var inserts = [(result: Table.CellType.ResultType, indexPath: IndexPath)]()
+		var moves = [(result: Table.CellType.ResultType, fromIndexPath: IndexPath, toIndexPath: IndexPath)]()
+		var reloads = [(result: Table.CellType.ResultType, indexPath: IndexPath)]()
 	}
-	*/
-	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+
+	var tableChanges: TableChanges!
+
+	// MARK: - NSFetchedResultsControllerDelegate methods
+
+	open override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		// First apply deletes (in descending order)
+		let sortedDeletes = tableChanges.deletes.sorted().map { $0.row }
+		if sortedDeletes.count > 0 {
+			table.removeRows(at: IndexSet(sortedDeletes))
+		}
+		// Then apply inserts (in ascending order)
+		for insert in tableChanges.inserts.sorted(by: { $0.indexPath < $1.indexPath }) {
+			let rowType = table.cellIdentifierFor(result: insert.result)
+			// TODO: We can scan ahead with the rowType and insert as a group (might be faster)
+//			print("Inserting \(rowType) @ \(insert.indexPath.row) into table with \(table.numberOfRows) rows")
+			table.insertRows(at: IndexSet(integer: insert.indexPath.row), withRowType: rowType)
+			applyResult(insert.result, at: insert.indexPath)
+		}
+		// Now apply moves (in order as delivered)
+		for move in tableChanges.moves {
+			table.removeRows(at: IndexSet(integer: move.fromIndexPath.row))
+			let rowType = table.cellIdentifierFor(result: move.result)
+			table.insertRows(at: IndexSet(integer: move.toIndexPath.row), withRowType: rowType)
+			applyResult(move.result, at: move.toIndexPath)
+		}
+		// Finally apply reloads (in order as delivered)
+		for reload in tableChanges.reloads {
+			applyResult(reload.result, at: reload.indexPath)
+		}
+		tableChanges = nil
+	}
+
+	open override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 		switch (type, indexPath, newIndexPath, anObject) {
 		case (.delete, .some(let indexPath), .none, _):
-			table.removeRows(at: IndexSet(integer: indexPath.row))
+			tableChanges.deletes.append(indexPath)
 		case (.insert, .none, .some(let newIndexPath), let result as Table.CellType.ResultType):
-			let rowType = table.cellIdentifierFor(result: result)
-			print("Inserting \(rowType) @ \(newIndexPath.row) into table with \(table.numberOfRows) rows")
-			let indexPath = newIndexPath.row > table.numberOfRows ? IndexPath(row: table.numberOfRows, section: newIndexPath.section) : newIndexPath
-			if table.numberOfRows == 0 {
-				table.setNumberOfRows(1, withRowType: rowType)
-			} else {
-				table.insertRows(at: IndexSet(integer: indexPath.row), withRowType: rowType)
-			}
-			applyResult(result, at: indexPath)
+			tableChanges.inserts.append((result: result, indexPath: newIndexPath))
 		case (.move, .some(let indexPath), .some(let newIndexPath), let result as Table.CellType.ResultType):
-			table.removeRows(at: IndexSet(integer: indexPath.row))
-			let rowType = table.cellIdentifierFor(result: result)
-			table.insertRows(at: IndexSet(integer: newIndexPath.row), withRowType: rowType)
-			applyResult(result, at: newIndexPath)
+			tableChanges.moves.append((result: result, fromIndexPath: indexPath, toIndexPath: newIndexPath))
 		case (.update, .some(let indexPath), _, let result as Table.CellType.ResultType):
-			applyResult(result, at: indexPath)
+			tableChanges.reloads.append((result: result, indexPath: indexPath))
 		default:
 			fatalError("Unexpected object change: Type=`\(type.rawValue)`, indexPath=`\(String(describing: indexPath))`, newIndexPath=`\(String(describing: newIndexPath))`, anObject=`\(anObject.self)`")
 		}
 	}
-	/*
+
 	open override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-	table.beginUpdates()
+		tableChanges = TableChanges()
 	}
-	*/
 }
 
 #endif
