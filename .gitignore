@@ -1,0 +1,10 @@
+.DS_Store
+Thumbs.db
+xcuserdata
+*.xcuserstate
+*.xcodeproj
+/.build
+/Packages
+*/build/*
+frameworks/*
+Libraries/*
