@@ -87,11 +87,11 @@ open class CoreTableViewDataSource<ResultType, TableViewType>: FetchedResultsCon
 			} else {
 				tableView.moveRow(at: indexPath, to: newIndexPath)
 			}
-		case (.update, .some(let indexPath), _): // TODO: Why does `update` have newIndexPath? Always or sometimes?
-			if let newIndexPath = newIndexPath {
-				assert(indexPath == newIndexPath, "Unexpected update with two index paths: \(indexPath) vs \(newIndexPath)")
-			} else {
-				fatalError("Why is newIndexPath not present?")
+		case (.update, .some(let indexPath), _):
+			// TODO: Why does `update` have newIndexPath? And why is it occasionally different (most of the time it is the same)?
+			// The suspicion is that an indeterminate sort order can cause this (should we update both index paths?)
+			if let newIndexPath = newIndexPath, newIndexPath != indexPath {
+				print("Unexpected update with two index paths: \(indexPath) vs \(newIndexPath)")
 			}
 			tableView.reloadRows(at: [indexPath], with: rowAnimation(for: type, with: anObject, at: indexPath))
 		default:
