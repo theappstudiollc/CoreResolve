@@ -38,7 +38,15 @@ public protocol CoreLocationProviding: CoreLocationCoordinateProviding, CoreLoca
 
 #elseif os(macOS)
 
+#if swift(>=5.3)
+
 public protocol CoreLocationProviding: CoreBeaconRanging, CoreLocationCoordinateProviding, CoreLocationHeadingProviding, CoreLocationMonitoring, CoreLocationRegionMonitoring { }
+
+#else // Support compiling with macOS 10.14 SDK in Xcode 11
+
+public protocol CoreLocationProviding: CoreLocationCoordinateProviding, CoreLocationMonitoring, CoreLocationRegionMonitoring { }
+
+#endif
 
 #endif
 
@@ -81,12 +89,16 @@ public protocol CoreLocationCoordinateProviding: class {
 	/// - Parameter regionClass: The type of region requested.
 	/// - Returns: Returns whether the device supports monitoring for the specified type of region.
 	static func isMonitoringAvailable(for regionClass: AnyClass) -> Bool
+
+	#if !os(macOS) || swift(>=5.3)
 	
 	/// Determines whether the device supports ranging.
 	///
 	/// - Returns: Returns whether the device supports ranging.
 	@available(macOS 10.15, *)
 	static func isRangingAvailable() -> Bool
+
+	#endif
 
 	/// Determines if the device supports significant location change monitoring.
 	///
@@ -105,7 +117,7 @@ public protocol CoreLocationCoordinateProviding: class {
 	
 	#endif
 
-	#if os(iOS) || os(macOS) || os(watchOS)
+	#if os(iOS) || (os(macOS) && swift(>=5.3)) || os(watchOS)
 
 	/// The type of user activity.
 	@available(macOS 10.15, watchOS 4.0, *)
@@ -125,7 +137,7 @@ public protocol CoreLocationCoordinateProviding: class {
 	
 	#endif
 	
-	#if os(iOS) || os(macOS)
+	#if os(iOS) || (os(macOS) && swift(>=5.3))
 	
 	/// Specifies that location updates may automatically be paused when possible.
 	@available(macOS 10.15, *)

@@ -46,6 +46,8 @@ public struct CoreBeaconIdentityConstraint: Equatable, Hashable {
 	}
 }
 
+#if !os(macOS) || swift(>=5.3) // not mac or Xcode 12.x
+
 public extension CoreBeaconIdentityConstraint {
 	
 	@available(iOS 13.0, macOS 10.15, *)
@@ -102,5 +104,7 @@ public extension CoreBeaconIdentityConstraint {
 		}
 	}
 }
+
+#endif
 
 #endif

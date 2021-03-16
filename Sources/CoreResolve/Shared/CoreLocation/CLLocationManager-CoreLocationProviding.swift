@@ -47,7 +47,7 @@ extension CLLocationManager: CoreLocationProviding {
 		}
 	}
 	
-	#if os(iOS) || os(macOS)
+	#if os(iOS) || (os(macOS) && swift(>=5.3))
 	
 	public func startRangingBeacons(with constraint: CoreBeaconIdentityConstraint) {
 		if #available(iOS 13.0, macOS 10.15, *) {
@@ -148,7 +148,7 @@ internal final class CoreLocationProvidingDelegateProxy: NSObject, CLLocationMan
 	
 	#endif
 	
-	#if os(iOS) || os(macOS) || os(watchOS)
+	#if os(iOS) || (os(macOS) && swift(>=5.3)) || os(watchOS)
 	
 	func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
 		guard let headingDelegate = delegate as? CoreLocationHeadingProvidingDelegate else { return }
