@@ -16,7 +16,7 @@ While seeming excessive, CoreResolve also provides some code that wraps existing
 
 Apps that need to share code between its apps and extensions are expected to provide their own frameworks for that purpose, which may extend or abstract away elements from CoreResove, if desired.
 
-The 'Resolve' project template is one example of creating a single app that supports all Apple platforms, and provides excellent guidance on how CoreResolve is meant to be used.
+The [Resolve](https://github.com/theappstudiollc/Resolve) project template is one example of creating a single app that supports all Apple platforms, and provides excellent guidance on how CoreResolve is meant to be used.
 
 ## Some naming conventions ##
 
