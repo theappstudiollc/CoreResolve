@@ -30,32 +30,39 @@ import AppKit
 /// Supports `ColumnLayoutAware` entities with more advanced capabilities than constrainLayoutProvider(_:to:with:)
 public class CoreColumnLayoutClient {
 	
-	private typealias DisposableConstraints = [NSLayoutConstraint]
-	
 	private var columnLayoutProvider: CoreColumnLayoutProviding
 	
-	private var columnConstraints: [DisposableConstraints?]
+	private var columnConstraints: [HorizontalBoundingConstraints?]
 	
 	deinit {
-		columnConstraints.forEach { $0?.reset() }
+		let allConstraints = columnConstraints.compactMap({ $0 }).flatMap { horizontalConstraints in
+			return [horizontalConstraints.leading, horizontalConstraints.trailing]
+		}
+		NSLayoutConstraint.deactivate(allConstraints)
 	}
 	
 	public init(columnLayoutProvider: CoreColumnLayoutProviding) {
 		self.columnLayoutProvider = columnLayoutProvider
-		columnConstraints = [DisposableConstraints?](repeating: nil, count: columnLayoutProvider.numberOfColumns)
+		columnConstraints = [HorizontalBoundingConstraints?](repeating: nil, count: columnLayoutProvider.numberOfColumns)
 	}
 	
 	public func setEnabled(_ enabled: Bool, for column: Int) {
-		if let pair = columnConstraints[column] {
-			pair.first!.isActive = enabled
-			pair.last!.isActive = enabled
+		guard let pair = columnConstraints[column] else { return }
+		if enabled {
+			NSLayoutConstraint.activate(pair)
+		} else {
+			NSLayoutConstraint.deactivate(pair)
 		}
 	}
 	
-	public func layout(layoutProvider: CoreHorizontalLayoutAnchorable, to column: Int, with priority: LayoutPriority = .required) {
-		columnConstraints[column]?.reset()
+	public func layout(layoutProvider: CoreHorizontalLayoutAnchorable, to column: Int, with priority: LayoutPriority = .required) throws {
+		guard (0..<columnLayoutProvider.numberOfColumns).contains(column) else { throw CoreColumnLayoutError.invalidColumnSpecified(column, maxAllowed: columnLayoutProvider.numberOfColumns) }
+		if let horizontalConstraints = columnConstraints[column] {
+			NSLayoutConstraint.deactivate(horizontalConstraints)
+		}
 		let columnProvider = columnLayoutProvider.layoutProvider(for: column)
 		let pair = columnProvider.constrainHorizontally(to: layoutProvider, with: priority)
+		NSLayoutConstraint.activate(pair)
 		columnConstraints[column] = pair
 	}
 }

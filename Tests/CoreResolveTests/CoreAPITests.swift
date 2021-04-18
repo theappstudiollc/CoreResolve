@@ -157,7 +157,7 @@ fileprivate class TestAPIOperation: MockCoreAPIOperation<TestAPIRequest> {
 		self.handleGenerateRequestData = { return urlString }
 	}
 	
-	override public func processResponse(_ response: CoreAPIRequestTaskResult, completion: @escaping (Error?) -> Void) {
+	public override func processResponse(_ response: CoreAPIRequestTaskResult, completion: @escaping (Error?) -> Void) {
 		switch response {
 		case .success(_):
 			completion(nil)

@@ -135,26 +135,26 @@ public final class VideoPlayerView: View {
 	
 	// MARK: - ViewController overrides
 	
-	override public var intrinsicContentSize: Size {
+	public override var intrinsicContentSize: Size {
 		guard videoSize != .zero else { return .noIntrinsicSize }
 		return videoSize
 	}
 	
 	#if os(macOS)
 	
-	override public var wantsUpdateLayer: Bool {
+	public override var wantsUpdateLayer: Bool {
 		return true
 	}
 	
 	#elseif os(iOS) || os(tvOS)
 	
-	override public class var layerClass: AnyClass {
+	public override class var layerClass: AnyClass {
 		return AVPlayerLayer.self
 	}
 
 	#endif
 	
-	override public func removeFromSuperview() {
+	public override func removeFromSuperview() {
 		self.asset = nil
 		super.removeFromSuperview()
 	}

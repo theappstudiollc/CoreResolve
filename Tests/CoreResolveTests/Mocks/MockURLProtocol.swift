@@ -26,15 +26,15 @@ public class MockURLProtocol: URLProtocol {
 	
 	public static var requestHandler: RequestHandler? = defaultRequestHandler
 	
-	override public class func canInit(with request: URLRequest) -> Bool {
+	public override class func canInit(with request: URLRequest) -> Bool {
 		return true
 	}
 	
-	override public class func canonicalRequest(for request: URLRequest) -> URLRequest {
+	public override class func canonicalRequest(for request: URLRequest) -> URLRequest {
 		return request
 	}
 	
-	override public func startLoading() {
+	public override func startLoading() {
 		let handler = MockURLProtocol.requestHandler ?? MockURLProtocol.defaultRequestHandler
 		do {
 			let (response, data) = try handler(request)
@@ -46,7 +46,7 @@ public class MockURLProtocol: URLProtocol {
 		}
 	}
 	
-	override public func stopLoading() {
+	public override func stopLoading() {
 		
 	}
 	

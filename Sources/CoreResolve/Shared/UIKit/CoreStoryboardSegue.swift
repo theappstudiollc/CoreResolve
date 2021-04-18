@@ -40,7 +40,7 @@ open class CoreStoryboardSegue: UIStoryboardSegue {
 		return viewController
 	}
 	
-	override open func perform() {
+	open override func perform() {
 		let destinationViewController = viewController(wrapping: destination)
 		destinationViewController.modalPresentationStyle = .custom
 		if destinationViewController.transitioningDelegate == nil {

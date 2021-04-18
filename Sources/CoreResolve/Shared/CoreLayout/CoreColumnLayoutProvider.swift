@@ -90,7 +90,7 @@ public class CoreColumnLayoutProvider: LayoutGuide {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
-    override public var owningView: View? {
+    public override var owningView: View? {
         didSet { updateOwningView() }
     }
 	
@@ -105,14 +105,13 @@ public class CoreColumnLayoutProvider: LayoutGuide {
 		guard let view = owningView else { return }
 		columns.map({ $0 as! LayoutGuide }).forEach { layoutGuide in
 			view.addLayoutGuide(layoutGuide)
-			layoutGuide.constrainVertically(to: self)
+			NSLayoutConstraint.activate(layoutGuide.constrainVertically(to: self))
 		}
-		spacers.forEach { $0.isActive = true }
+		NSLayoutConstraint.activate(spacers)
 		let leading = leadingAnchor.constraint(equalTo: columns[0].leadingAnchor)
 		let trailing = trailingAnchor.constraint(equalTo: columns[numberOfColumns - 1].trailingAnchor)
 		constraintPair = [leading, trailing]
-		leading.isActive = true
-		trailing.isActive = true
+		NSLayoutConstraint.activate([leading, trailing])
 	}
 }
 

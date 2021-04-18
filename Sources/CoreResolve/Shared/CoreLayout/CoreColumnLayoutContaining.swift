@@ -39,8 +39,8 @@ public extension CoreColumnLayoutContaining where Self: View {
 	/// Configures the columnLayoutProvider to provide `CoreColumnLayoutProviding` capability to the current View
 	///
 	/// - Parameter layoutProvider: The desired Layout Provider of the View with which to map the leading and trailing anchors of the columnLayoutProvider
-	/// - Returns: A Disposable array of constraints created to horizontally constrain the columnLayoutProvider to the layoutProvider parameter
-	@discardableResult func configureColumns(to layoutProvider: CoreHorizontalLayoutAnchorable) -> [NSLayoutConstraint] {
+	/// - Returns: An array of constraints that constrain the columnLayoutProvider to the layoutProvider parameter, which have not yet been activated
+	func configureColumns(to layoutProvider: CoreHorizontalLayoutAnchorable) -> HorizontalBoundingConstraints {
 		
 		switch columnLayoutProvider {
 		case let columnLayoutGuide as LayoutGuide:

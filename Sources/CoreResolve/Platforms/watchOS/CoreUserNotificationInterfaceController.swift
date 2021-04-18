@@ -40,44 +40,44 @@ open class CoreUserNotificationInterfaceController: WKUserNotificationInterfaceC
 		printsDeinit()
 	}
 
-	override public init() {
+	public override init() {
 		super.init()
 		printsInit()
 	}
 
-	override open func awake(withContext context: Any?) {
+	open override func awake(withContext context: Any?) {
 		super.awake(withContext: context)
 		printsAwakeWithContext(context)
 	}
 
-	override open func didAppear() {
+	open override func didAppear() {
 		super.didAppear()
 		printsDidAppear()
 	}
 
-	override open func didDeactivate() {
+	open override func didDeactivate() {
 		super.didDeactivate()
 		printsDidDeactivate()
 	}
 
 	@available(watchOS 5.0, *)
-	override open func didReceive(_ notification: UNNotification) {
+	open override func didReceive(_ notification: UNNotification) {
 		super.didReceive(notification)
 		printsDidReceive(notification)
 	}
 
 	@available(watchOS 3.0, *)
-	override open func didReceive(_ notification: UNNotification, withCompletion completionHandler: @escaping (WKUserNotificationInterfaceType) -> Swift.Void) {
+	open override func didReceive(_ notification: UNNotification, withCompletion completionHandler: @escaping (WKUserNotificationInterfaceType) -> Swift.Void) {
 		super.didReceive(notification, withCompletion: completionHandler)
 		printsDidReceive(notification, withCompletion: completionHandler)
 	}
 
-	override open func willActivate() {
+	open override func willActivate() {
 		super.willActivate()
 		printsWillActivate()
 	}
 
-	override open func willDisappear() {
+	open override func willDisappear() {
 		super.willDisappear()
 		printsWillDisappear()
 	}

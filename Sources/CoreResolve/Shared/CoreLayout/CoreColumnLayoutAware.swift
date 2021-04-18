@@ -20,6 +20,12 @@
 
 #if !os(watchOS)
 
+#if os(iOS) || os(tvOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
+
 /// Describes an entity that interacts with a single `CoreColumnLayoutProviding` instance
 public protocol CoreColumnLayoutAware {
 	
@@ -35,16 +41,12 @@ public extension CoreColumnLayoutAware {
 	/// - Parameters:
 	///   - layoutProvider: The Layout Provider to attach
 	///   - column: The column which will attach to the view
-	func constrainLayoutProvider(_ layoutProvider: CoreHorizontalLayoutAnchorable, to column: Int, with priority: LayoutPriority = .required) {
-		guard let columnLayoutProvider = columnLayoutProvider else { return }
-		precondition(column >= 0 && column < columnLayoutProvider.numberOfColumns)
+	func constrainLayoutProvider(_ layoutProvider: CoreHorizontalLayoutAnchorable, to column: Int, with priority: LayoutPriority = .required) throws {
+		guard let columnLayoutProvider = columnLayoutProvider else { throw CoreColumnLayoutError.columnLayoutProvidingNotAvailable }
+		guard (0..<columnLayoutProvider.numberOfColumns).contains(column) else { throw CoreColumnLayoutError.invalidColumnSpecified(column, maxAllowed: columnLayoutProvider.numberOfColumns) }
 		let columnProvider = columnLayoutProvider.layoutProvider(for: column)
-		let leading = columnProvider.leadingAnchor.constraint(equalTo: layoutProvider.leadingAnchor)
-		let trailing = columnProvider.trailingAnchor.constraint(equalTo: layoutProvider.trailingAnchor)
-		leading.priority = priority
-		trailing.priority = priority
-		leading.isActive = true
-		trailing.isActive = true
+		let constraints = columnProvider.constrainHorizontally(to: layoutProvider, with: priority)
+		NSLayoutConstraint.activate(constraints)
 	}
 }
 

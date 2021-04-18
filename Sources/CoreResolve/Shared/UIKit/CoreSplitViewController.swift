@@ -35,59 +35,59 @@ open class CoreSplitViewController: UISplitViewController, CorePrintsSupporting 
 		printsDeinit()
 	}
 	
-	override open func allowedChildrenForUnwinding(from source: UIStoryboardUnwindSegueSource) -> [UIViewController] {
+	open override func allowedChildrenForUnwinding(from source: UIStoryboardUnwindSegueSource) -> [UIViewController] {
 		let retVal = super.allowedChildrenForUnwinding(from: source)
 		printsAllowedChildViewControllersForUnwinding(from: source, retVal: retVal)
 		return retVal
 	}
 	
-	override open func applicationFinishedRestoringState() {
+	open override func applicationFinishedRestoringState() {
 		super.applicationFinishedRestoringState()
 		printsApplicationFinishedRestoringState()
 	}
 	
-	override open func awakeFromNib() {
+	open override func awakeFromNib() {
 		super.awakeFromNib()
 		printsAwakeFromNib()
 		checkSegueSetup(for: self)
 	}
 
 	@available(iOS 13.0, tvOS 13.0, *)
-	override open func canPerformUnwindSegueAction(_ action: Selector, from fromViewController: UIViewController, sender: Any?) -> Bool {
+	open override func canPerformUnwindSegueAction(_ action: Selector, from fromViewController: UIViewController, sender: Any?) -> Bool {
 		let retVal = super.canPerformUnwindSegueAction(action, from: fromViewController, sender: sender)
 		printsCanPerformUnwindSegueAction(action, from: fromViewController, sender: sender, retVal: retVal)
 		return retVal
 	}
 
 	@available(macCatalyst, deprecated: 13.0)
-	override open func canPerformUnwindSegueAction(_ action: Selector, from fromViewController: UIViewController, withSender sender: Any) -> Bool {
+	open override func canPerformUnwindSegueAction(_ action: Selector, from fromViewController: UIViewController, withSender sender: Any) -> Bool {
 		let retVal = super.canPerformUnwindSegueAction(action, from: fromViewController, withSender: sender)
 		printsCanPerformUnwindSegueAction(action, from: fromViewController, withSender: sender, retVal: retVal)
 		return retVal
 	}
 
-	override open func childContaining(_ source: UIStoryboardUnwindSegueSource) -> UIViewController? {
+	open override func childContaining(_ source: UIStoryboardUnwindSegueSource) -> UIViewController? {
 		let retVal = super.childContaining(source)
 		printsChildContaining(source, retVal: retVal)
 		return retVal
 	}
 
-	override open func collapseSecondaryViewController(_ secondaryViewController: UIViewController, for splitViewController: UISplitViewController) {
+	open override func collapseSecondaryViewController(_ secondaryViewController: UIViewController, for splitViewController: UISplitViewController) {
 		super.collapseSecondaryViewController(secondaryViewController, for: splitViewController)
 		printsCollapseSecondaryViewController(secondaryViewController, for: splitViewController)
 	}
 
-	override open func decodeRestorableState(with coder: NSCoder) {
+	open override func decodeRestorableState(with coder: NSCoder) {
 		super.decodeRestorableState(with: coder)
 		printsDecodeRestorableState(with: coder)
 	}
 	
-	override open func didMove(toParent parent: UIViewController?) {
+	open override func didMove(toParent parent: UIViewController?) {
 		super.didMove(toParent: parent)
 		printsDidMove(toParent: parent)
 	}
 	
-	override open func encodeRestorableState(with coder: NSCoder) {
+	open override func encodeRestorableState(with coder: NSCoder) {
 		super.encodeRestorableState(with: coder)
 		printsEncodeRestorableState(with: coder)
 	}
@@ -97,100 +97,100 @@ open class CoreSplitViewController: UISplitViewController, CorePrintsSupporting 
 		printsInit(coder: aDecoder)
 	}
 	
-	override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+	public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 		printsInit(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 	}
 	
-	override open func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	open override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		super.prepare(for: segue, sender: sender)
 		printsPrepare(for: segue, sender: sender)
 	}
 
-	override open func restoreUserActivityState(_ activity: NSUserActivity) {
+	open override func restoreUserActivityState(_ activity: NSUserActivity) {
 		super.restoreUserActivityState(activity)
 		printsRestoreUserActivityState(activity)
 	}
 
-	override open func separateSecondaryViewController(for splitViewController: UISplitViewController) -> UIViewController? {
+	open override func separateSecondaryViewController(for splitViewController: UISplitViewController) -> UIViewController? {
 		let retVal = super.separateSecondaryViewController(for: splitViewController)
 		printsSeparateSecondaryViewController(for: splitViewController, retVal: retVal)
 		return retVal
 	}
 
-	override open func targetViewController(forAction action: Selector, sender: Any?) -> UIViewController? {
+	open override func targetViewController(forAction action: Selector, sender: Any?) -> UIViewController? {
 		let retVal = super.targetViewController(forAction: action, sender: sender)
 		printsTargetViewController(forAction: action, sender: sender, retVal: retVal)
 		return retVal
 	}
 
-	override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+	open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 		printsTraitCollectionDidChange(previousTraitCollection)
 	}
 	
-	override open func unwind(for unwindSegue: UIStoryboardSegue, towards subsequentVC: UIViewController) {
+	open override func unwind(for unwindSegue: UIStoryboardSegue, towards subsequentVC: UIViewController) {
 		super.unwind(for: unwindSegue, towards: subsequentVC)
 		printsUnwind(for: unwindSegue, towardsViewController: subsequentVC)
 	}
 
-	override open func updateUserActivityState(_ activity: NSUserActivity) {
+	open override func updateUserActivityState(_ activity: NSUserActivity) {
 		super.updateUserActivityState(activity)
 		printsUpdateUserActivityState(activity)
 	}
 
-	override open func updateViewConstraints() {
+	open override func updateViewConstraints() {
 		super.updateViewConstraints()
 		printsUpdateViewConstraints()
 	}
 	
-	override open func viewDidAppear(_ animated: Bool) {
+	open override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		printsViewDidAppear(animated)
 	}
 	
-	override open func viewDidDisappear(_ animated: Bool) {
+	open override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		printsViewDidDisappear(animated)
 	}
 	
-	override open func viewDidLayoutSubviews() {
+	open override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		printsViewDidLayoutSubviews()
 	}
 	
-	override open func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 		printsViewDidLoad()
 	}
 	
 	@available(iOS 11.0, tvOS 11.0, *)
-	override open func viewSafeAreaInsetsDidChange() {
+	open override func viewSafeAreaInsetsDidChange() {
 		super.viewSafeAreaInsetsDidChange()
 		printsViewSafeAreaInsetsDidChange()
 	}
 	
-	override open func viewWillAppear(_ animated: Bool) {
+	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		printsViewWillAppear(animated)
 	}
 	
-	override open func viewWillDisappear(_ animated: Bool) {
+	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		printsViewWillDisappear(animated)
 	}
 	
-	override open func viewWillLayoutSubviews() {
+	open override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		printsViewWillLayoutSubviews()
 	}
 	
-	override open func willMove(toParent parent: UIViewController?) {
+	open override func willMove(toParent parent: UIViewController?) {
 		super.willMove(toParent: parent)
 		printsWillMove(toParent: parent)
 	}
 	
-	override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+	open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
 		printsViewWillTransition(to: size, with: coordinator)
 	}

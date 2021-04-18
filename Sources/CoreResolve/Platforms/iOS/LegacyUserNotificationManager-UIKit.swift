@@ -37,7 +37,7 @@ public final class LegacyUserNotificationManager: CoreRemoteNotificationAdapter,
 		registrationHandler?(.success(()))
 	}
 
-	override public func remoteTokenRegistrationFailed(_ error: Error) {
+	public override func remoteTokenRegistrationFailed(_ error: Error) {
 		super.remoteTokenRegistrationFailed(error)
 		registrationHandler?(.failure(error))
 	}

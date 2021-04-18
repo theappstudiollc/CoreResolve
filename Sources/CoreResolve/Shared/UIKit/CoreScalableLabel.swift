@@ -73,7 +73,7 @@ open class CoreScalableLabel: UILabel {
 
 	// MARK: - UILabel overrides
 
-	override open func didMoveToWindow() {
+	open override func didMoveToWindow() {
 		super.didMoveToWindow()
 		updateMinimumSize()
 	}
@@ -86,14 +86,14 @@ open class CoreScalableLabel: UILabel {
 		self.init(coder: aDecoder, notificationCenter: .default)
 	}
 
-	override open var font: UIFont! {
+	open override var font: UIFont! {
 		didSet {
 			originalFont = font
 			updateFont()
 		}
 	}
 
-	override open var text: String? {
+	open override var text: String? {
 		didSet { if text != oldValue { updateMinimumSize() } }
 	}
 

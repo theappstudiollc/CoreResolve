@@ -30,17 +30,17 @@ open class MockCoreAPIOperation<APIRequest>: CoreAPIOperation<APIRequest> where 
 	open var handleFinish = { }
 	open var handleGenerateRequestData: (() throws -> APIRequest.RequestDataType)?
 	
-	override open func cancel() {
+	open override func cancel() {
 		handleCancel()
 		super.cancel()
 	}
 	
-	override open func finish() {
+	open override func finish() {
 		handleFinish()
 		super.finish()
 	}
 	
-	override open func generateRequestData() throws -> APIRequest.RequestDataType {
+	open override func generateRequestData() throws -> APIRequest.RequestDataType {
 		guard let handleGenerateRequestData = handleGenerateRequestData else {
 			throw MockCoreAPIOperationError.missingGenerateRequestDataHandler
 		}

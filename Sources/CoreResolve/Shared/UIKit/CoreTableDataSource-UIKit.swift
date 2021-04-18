@@ -25,7 +25,7 @@ import UIKit
 
 open class CoreTableDataSource<TableView>: CoreTableViewDataSource<TableView.CellType.ResultType, TableView> where TableView: CoreTable {
 
-	override public init(for tableView: TableView, with fetchController: @escaping CoreTableViewDataSource<TableView.CellType.ResultType, TableView>.FetchController) {
+	public override init(for tableView: TableView, with fetchController: @escaping CoreTableViewDataSource<TableView.CellType.ResultType, TableView>.FetchController) {
 		super.init(for: tableView, with: fetchController)
 		if let prefetcher = getPrefetchDataSource() {
 			prefetchDataSource = prefetcher

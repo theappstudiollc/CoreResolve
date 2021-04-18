@@ -28,42 +28,55 @@ import AppKit
 
 /// Represents a collection of horizontally-oriented anchors with which to apply AutoLayout constraints
 public protocol CoreHorizontalLayoutAnchorable: class {
-	
+
 	var leadingAnchor: NSLayoutXAxisAnchor { get }
-	
+
 	var trailingAnchor: NSLayoutXAxisAnchor { get }
-	
+
 	var leftAnchor: NSLayoutXAxisAnchor { get }
-	
+
 	var rightAnchor: NSLayoutXAxisAnchor { get }
-	
+
 	var widthAnchor: NSLayoutDimension { get }
-	
+
 	var centerXAnchor: NSLayoutXAxisAnchor { get }
 }
 
 // MARK: - Convenience methods for `CoreHorizontalLayoutAnchorable` instances
 extension CoreHorizontalLayoutAnchorable {
-	
-	@discardableResult public func constrainHorizontally(to layoutAnchors: CoreHorizontalLayoutAnchorable, with priority: LayoutPriority = .required) -> [NSLayoutConstraint] {
-		let leading = leadingAnchor.constraint(equalTo: layoutAnchors.leadingAnchor)
-		let trailing = trailingAnchor.constraint(equalTo: layoutAnchors.trailingAnchor)
-		leading.priority = priority
-		trailing.priority = priority
-		leading.isActive = true
-		trailing.isActive = true
-		return [leading, trailing]
+
+	/// Horizontally constrains the calling `CoreHorizontalLayoutAnchorable` to the provided layoutAnchors
+	/// - Parameters:
+	///   - layoutAnchors: The `CoreHorizontalLayoutAnchorable` on which you wish to anchor the leading and trailing constraints
+	///   - priority: The `LayoutPriority` of the leading and trailing constraints
+	/// - Returns: A structure containing the leading and trailing constraints, which have not yet been activated
+	public func constrainHorizontally(to layoutAnchors: CoreHorizontalLayoutAnchorable, with priority: LayoutPriority = .required) -> HorizontalBoundingConstraints {
+		return constrainHorizontally(to: layoutAnchors, leadingPriority: priority, trailingPriority: priority)
 	}
-	
+
+	/// Horizontally constrains the calling `CoreHorizontalLayoutAnchorable` to the provided layoutAnchors
+	/// - Parameters:
+	///   - layoutAnchors: The `CoreHorizontalLayoutAnchorable` on which you wish to anchor the leading and trailing constraints
+	///   - leadingPriority: The `LayoutPriority` of the leading constraint
+	///   - trailingPriority: The `LayoutPriority` of the trailing constraint
+	/// - Returns: A structure containing the leading and trailing constraints, which have not yet been activated
+	public func constrainHorizontally(to layoutAnchors: CoreHorizontalLayoutAnchorable, leadingPriority: LayoutPriority = .required, trailingPriority: LayoutPriority = .required) -> HorizontalBoundingConstraints {
+		let leading = leadingAnchor.constraint(equalTo: layoutAnchors.leadingAnchor)
+		let trailing = layoutAnchors.trailingAnchor.constraint(equalTo: trailingAnchor)
+		leading.priority = leadingPriority
+		trailing.priority = trailingPriority
+		return HorizontalBoundingConstraints(leading: leading, trailing: trailing)
+	}
+
 	/// The current width of the `CoreHorizontalLayoutAnchorable` instance as known to AutoLayout
 	public var currentLayoutWidth: CGFloat {
 		switch self {
 		case let layoutGuide as LayoutGuide:
-            #if os(macOS)
-                return layoutGuide.frame.width
-            #else
-                return layoutGuide.layoutFrame.width
-            #endif
+			#if os(macOS)
+				return layoutGuide.frame.width
+			#else
+				return layoutGuide.layoutFrame.width
+			#endif
 		case let view as View:
 			return view.bounds.width
 		default:
@@ -74,50 +87,63 @@ extension CoreHorizontalLayoutAnchorable {
 
 /// Represents a collection of vertically-oriented anchors with which to apply AutoLayout constraints
 public protocol CoreVerticalLayoutAnchorable {
-	
+
 	var topAnchor: NSLayoutYAxisAnchor { get }
-	
+
 	var bottomAnchor: NSLayoutYAxisAnchor { get }
-	
+
 	var heightAnchor: NSLayoutDimension { get }
-	
+
 	var centerYAnchor: NSLayoutYAxisAnchor { get }
 }
 
 // MARK: - Convenience methods for `CoreVerticalLayoutAnchorable` instances
 extension CoreVerticalLayoutAnchorable {
-	
-	@discardableResult public func constrainVertically(to layoutAnchors: CoreVerticalLayoutAnchorable, with priority: LayoutPriority = .required) -> [NSLayoutConstraint] {
+
+	/// Vertically constrains the calling `CoreVerticalLayoutAnchorable` to the provided layoutAnchors
+	/// - Parameters:
+	///   - layoutAnchors: The `CoreVerticalLayoutAnchorable` on which you wish to anchor the top and bottom constraints
+	///   - priority: The `LayoutPriority` of the top and bottom constraints
+	/// - Returns: A structure containing the top and bottom constraints, which have not yet been activated
+	public func constrainVertically(to layoutAnchors: CoreVerticalLayoutAnchorable, with priority: LayoutPriority = .required) -> VerticalBoundingConstraints {
 		let top = topAnchor.constraint(equalTo: layoutAnchors.topAnchor)
-		let bottom = bottomAnchor.constraint(equalTo: layoutAnchors.bottomAnchor)
+		let bottom = layoutAnchors.bottomAnchor.constraint(equalTo: bottomAnchor)
 		top.priority = priority
 		bottom.priority = priority
-		top.isActive = true
-		bottom.isActive = true
-		return [top, bottom]
+		return VerticalBoundingConstraints(top: top, bottom: bottom)
 	}
 }
 
 /// Represents a class that can provide anchors with which to apply AutoLayout constraints
-public protocol CoreLayoutAnchorable: CoreHorizontalLayoutAnchorable, CoreVerticalLayoutAnchorable { }
+public protocol CoreLayoutAnchorable: CoreHorizontalLayoutAnchorable, CoreVerticalLayoutAnchorable {
+
+	@available(iOS 11, macOS 11, tvOS 11, *)
+	/// The insets that you use to determine the safe area for this `CoreLayoutAnchorable`.
+	var safeAreaInsets: EdgeInsets { get }
+}
 
 extension CoreLayoutAnchorable {
-	
-	@discardableResult public func constrain(to layoutAnchors: CoreLayoutAnchorable, with priority: LayoutPriority = .required) -> [NSLayoutConstraint] {
+
+	/// Constrains the calling `CoreLayoutAnchorable` to the provided layoutAnchors
+	/// - Parameters:
+	///   - layoutAnchors: The `CoreLayoutAnchorable` on which you wish to anchor leading, trailing, top, and bottom constraints
+	///   - priority: The `LayoutPriority` of all constraints
+	/// - Returns: A structure containing horizontal and vertical constraint structures, which have not yet been activated
+	public func constrain(to layoutAnchors: CoreLayoutAnchorable, with priority: LayoutPriority = .required) -> BoundingConstraints {
 		let horizontals = constrainHorizontally(to: layoutAnchors, with: priority)
 		let verticals = constrainVertically(to: layoutAnchors, with: priority)
-		return horizontals + verticals
+		return BoundingConstraints(horizontal: horizontals, vertical: verticals)
 	}
-	
+
 	/// The current frame of the `CoreLayoutAnchorable` instance as known to AutoLayout
 	public var layoutFrame: CGRect {
 		switch self {
 		case let layoutGuide as LayoutGuide:
-            #if os(macOS)
-                return layoutGuide.frame
-            #else
-                return layoutGuide.layoutFrame
-            #endif
+			#if os(macOS)
+				return layoutGuide.frame
+			#else
+				return layoutGuide.layoutFrame
+			#endif
 		case let view as View:
 			return view.bounds
 		default:
@@ -127,7 +153,14 @@ extension CoreLayoutAnchorable {
 }
 
 // MARK: - Marks LayoutGuide as `CoreLayoutAnchorable`
-extension LayoutGuide: CoreLayoutAnchorable { }
+extension LayoutGuide: CoreLayoutAnchorable {
+
+	@available(iOS 11, macOS 11, tvOS 11, *)
+	public var safeAreaInsets: EdgeInsets {
+		guard let owningView = owningView else { return .zero }
+		return owningView.safeAreaInsets
+	}
+}
 
 // MARK: - Marks View as `CoreLayoutAnchorable`
 extension View: CoreLayoutAnchorable { }

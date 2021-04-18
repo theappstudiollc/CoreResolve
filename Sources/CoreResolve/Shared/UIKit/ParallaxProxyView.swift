@@ -27,7 +27,7 @@ public final class ParallaxProxyView: UIView {
 	
 	// MARK: - UIView overrides
 	
-	override public class var layerClass: AnyClass {
+	public override class var layerClass: AnyClass {
 		return ParallaxProxyLayer.self
 	}
 	

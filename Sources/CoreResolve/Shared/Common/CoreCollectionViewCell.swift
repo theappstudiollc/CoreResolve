@@ -46,7 +46,7 @@ open class CoreCollectionViewCell: UICollectionViewCell { }
 /// Core collection view cell, that enables CorePrintsSupporting capabilities in DEBUG mode
 open class CoreCollectionViewCell: CollectionViewCell, CorePrintsSupporting {
 	
-	override open func prepareForReuse() {
+	open override func prepareForReuse() {
 		super.prepareForReuse()
 		guard self is CorePrintsViewLifecycle else { return }
 		LogManager.viewLifecycle.debug("%{public}@ prepareForReuse()", debugDescription)

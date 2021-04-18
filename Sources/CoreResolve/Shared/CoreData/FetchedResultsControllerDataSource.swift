@@ -46,7 +46,7 @@ open class FetchedResultsControllerDataSource<ResultType>: NSObject, NSFetchedRe
 		fatalError("\(self): Unhandled error loading new NSFetchedResultsController: \(error.localizedDescription)")
 	}
 	
-	override open func responds(to aSelector: Selector!) -> Bool {
+	open override func responds(to aSelector: Selector!) -> Bool {
 		guard !Self.tracksResults else {
 			return super.responds(to: aSelector)
 		}

@@ -89,7 +89,7 @@ open class CoreTableViewDataSource<ResultType, TableViewType>: FetchedResultsCon
 			}
 		case (.update, .some(let indexPath), _):
 			// TODO: Why does `update` have newIndexPath? And why is it occasionally different (most of the time it is the same)?
-			// The suspicion is that an indeterminate sort order can cause this (should we update both index paths?)
+			// The suspicion is that an indeterminate sort order can cause this (should we reload both index paths?)
 			if let newIndexPath = newIndexPath, newIndexPath != indexPath {
 				print("Unexpected update with two index paths: \(indexPath) vs \(newIndexPath)")
 			}

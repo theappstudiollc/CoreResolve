@@ -45,7 +45,7 @@ import UIKit
 	
 	// MARK: - UIView overrides
 	
-	override public class var layerClass: AnyClass {
+	public override class var layerClass: AnyClass {
 		return CAGradientLayer.self
 	}
 	

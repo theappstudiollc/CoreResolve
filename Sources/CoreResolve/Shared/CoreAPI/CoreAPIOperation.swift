@@ -26,12 +26,12 @@ open class CoreAPIOperation<APIRequest>: CoreAsynchronousOperation where APIRequ
 	
 	internal var task: CoreAPIRequestTask<APIRequest>!
 	
-	override open func cancel() {
+	open override func cancel() {
 		task?.cancel()
 		super.cancel()
 	}
 	
-	override open func main() {
+	open override func main() {
 		do {
 			let data = try generateRequestData()
 			task.performRequest(requestData: data, completionHandler: processAgentResponse)

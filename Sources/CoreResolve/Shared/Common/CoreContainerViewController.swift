@@ -112,7 +112,7 @@ open class CoreContainerViewController: CoreViewController {
 				// Ensure the child's frame resizes with the activeChildLayoutGuide
 				activeChild.view.translatesAutoresizingMaskIntoConstraints = false
 				view.addSubview(activeChild.view)
-				activeChild.view.constrain(to: activeChildLayoutAnchorable)
+				NSLayoutConstraint.activate(activeChild.view.constrain(to: activeChildLayoutAnchorable))
 			}
 		}
 		
@@ -184,7 +184,7 @@ open class CoreContainerViewController: CoreViewController {
 	#if os(iOS) || os(tvOS)
     
     var manualAppearanceHandling = false
-    override open var shouldAutomaticallyForwardAppearanceMethods: Bool {
+    open override var shouldAutomaticallyForwardAppearanceMethods: Bool {
         return !manualAppearanceHandling
     }
 	
