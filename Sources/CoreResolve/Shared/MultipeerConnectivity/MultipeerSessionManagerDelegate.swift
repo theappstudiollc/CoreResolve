@@ -23,7 +23,7 @@
 import Foundation
 import MultipeerConnectivity
 
-internal protocol MultipeerSessionManagerDelegate: class {
+internal protocol MultipeerSessionManagerDelegate: AnyObject {
 	
 	func copyResource(with name: String, at url: URL) throws -> URL
 	

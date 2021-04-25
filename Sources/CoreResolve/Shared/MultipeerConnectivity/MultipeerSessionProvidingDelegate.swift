@@ -23,7 +23,7 @@
 import MultipeerConnectivity
 
 /// Handles events from the MultipeerSessionProviding instance
-public protocol MultipeerSessionProvidingDelegate: class {
+public protocol MultipeerSessionProvidingDelegate: AnyObject {
 	
 	/// Finished receiving a resource from a remote peer
 	///

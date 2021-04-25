@@ -27,7 +27,7 @@ import AppKit
 #endif
 
 /// Represents a collection of horizontally-oriented anchors with which to apply AutoLayout constraints
-public protocol CoreHorizontalLayoutAnchorable: class {
+public protocol CoreHorizontalLayoutAnchorable: AnyObject {
 
 	var leadingAnchor: NSLayoutXAxisAnchor { get }
 

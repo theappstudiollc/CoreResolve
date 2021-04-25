@@ -23,7 +23,7 @@
 import MultipeerConnectivity
 
 /// Provides a lightweight MultipeerConnectivity session (i.e. a testable subset of MCSession capability)
-public protocol MultipeerSessionProviding: class {
+public protocol MultipeerSessionProviding: AnyObject {
 	
 	/// The MultipeerSessionProvider's currently connected MCPeerIDs
 	var connectedPeers: [MCPeerID] { get }

@@ -21,7 +21,7 @@
 import CoreLocation
 
 /// Handles events from the CoreLocationProviding instance
-public protocol CoreLocationProvidingDelegate: class {
+public protocol CoreLocationProvidingDelegate: AnyObject {
 	
 	/// Invoked when the authorization status changes for this application.
 	///

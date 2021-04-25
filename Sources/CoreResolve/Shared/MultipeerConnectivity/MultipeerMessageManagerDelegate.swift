@@ -23,7 +23,7 @@
 import MultipeerConnectivity
 
 /// Delegate to handle events from the MultipeerMessageManager
-public protocol MultipeerMessageManagerDelegate: class {
+public protocol MultipeerMessageManagerDelegate: AnyObject {
 	
 	/// Notifies when the MultipeerMessageManager has received a payload from a remote peer
 	///

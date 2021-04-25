@@ -21,7 +21,7 @@
 import Foundation
 
 /// Handles remote-notification-based events
-public protocol CoreRemoteNotificationAdaptingDelegate: class {
+public protocol CoreRemoteNotificationAdaptingDelegate: AnyObject {
 
 	/// Called by the `CoreRemoteNotificationAdapting` implementation when the device token has been updated
 	/// - Parameter token: The app-specific token representing the device

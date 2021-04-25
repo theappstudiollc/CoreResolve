@@ -51,7 +51,7 @@ public protocol CoreLocationProviding: CoreLocationCoordinateProviding, CoreLoca
 #endif
 
 /// Provides CoreLocation services (i.e. a testable set of CLLocationManager capability)
-public protocol CoreLocationCoordinateProviding: class {
+public protocol CoreLocationCoordinateProviding: AnyObject {
 	
 	/// Determines the current authorization status of the calling application.
 	///
@@ -167,7 +167,7 @@ public protocol CoreLocationDeferredUpdatesProviding {
 	func disallowDeferredLocationUpdates()
 }
 
-public protocol CoreLocationHeadingProviding: class {
+public protocol CoreLocationHeadingProviding: AnyObject {
 	
 	/// Dismisses the heading calibration immediately.
 	@available(macOS 10.15, *)
@@ -200,7 +200,7 @@ public protocol CoreLocationMonitoring {
 	func startUpdatingLocation()
 }
 
-public protocol CoreLocationRegionMonitoring: class {
+public protocol CoreLocationRegionMonitoring: AnyObject {
 	
 	/// Asynchronously retrieves the cached state of the specified region.
 	///
