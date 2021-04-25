@@ -39,7 +39,7 @@ extension NSManagedObjectContext: CoreTransactionProviding {
 	public func cancelTransaction() {
 		guard let undoManager = undoManager else { return }
 		undoManager.endUndoGrouping()
-		rollback()
+		undoManager.undo()
 	}
 	
 	/// Commits a transaction, and throws an error if the transaction could not be committed. It should be safe to commit a transaction without first beginning one
