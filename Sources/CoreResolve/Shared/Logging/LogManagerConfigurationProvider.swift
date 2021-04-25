@@ -24,16 +24,19 @@ import Foundation
 /// Implements the basic LogManagerConfigurationProviding capability (minus ApplicationReserved log levels)
 public struct LogManagerConfigurationProvider: LogManagerConfigurationProviding {
 	
+	internal let category: String?
 	private let osLogger: OSLog!
 	
 	public let supportedLogLevels: [CoreLogLevel] = [.`default`, .debug, .info, .error, .fault]
 	
 	@available(iOS 10.0, tvOS 10.0, watchOS 3.0, *)
 	public init(osLog: OSLog) {
-		self.osLogger = osLog
+		category = nil
+		osLogger = osLog
 	}
 	
 	public init() {
+		category = nil
 		if #available(iOS 10.0, macOS 10.12.0, tvOS 10.0, watchOS 3.0, *) {
 			osLogger = .default
 		} else {
@@ -42,6 +45,7 @@ public struct LogManagerConfigurationProvider: LogManagerConfigurationProviding 
 	}
 
 	public init(bundle: Bundle, category: String = "\(CoreLoggingService.self)") {
+		self.category = category
 		if #available(iOS 10.0, macOS 10.12.0, tvOS 10.0, watchOS 3.0, *) {
 			if let bundleIdentifier = bundle.bundleIdentifier {
 				osLogger = OSLog(subsystem: bundleIdentifier, category: category)

@@ -59,9 +59,55 @@ public final class LogManager {
 		#endif
 	}
 	
-	private func logAsLegacy(_ level: CoreLogLevel, _ message: StaticString) {
-		// For older OS versions, don't parse arguments because of security concerns
-		print("\(level) \(message.description)")
+	private func logAsLegacy(_ level: CoreLogLevel, _ message: StaticString, _ args: [Any]) {
+		if args.count == 0 {
+			print("\(legacyLogPrefix(for: level)) \(message.description)")
+		} else {
+			let replacementRanges = message.replacementRanges
+			if replacementRanges.all.count == args.count {
+				let ranges = replacementRanges.all.sorted { $0.lowerBound > $1.lowerBound }
+				var printedMessage = message.description
+				for (range, replacement) in zip(ranges, args.reversed()) {
+					if replacementRanges.private.contains(range) {
+						printedMessage.replaceSubrange(range, with: "<REDACTED>")
+					} else {
+						printedMessage.replaceSubrange(range, with: "\(replacement)")
+					}
+				}
+				print("\(legacyLogPrefix(for: level)) \(printedMessage)")
+			} else {
+				print("\(legacyLogPrefix(for: level)) \(message.description)")
+			}
+		}
+	}
+
+	private func legacyLogPrefix(for level: CoreLogLevel) -> String {
+		guard let logManagerConfiguration = configurationProvider as? LogManagerConfigurationProvider, let category = logManagerConfiguration.category else {
+			return "[\(level)]"
+		}
+		return "[\(category):\(level)]"
+	}
+}
+
+fileprivate extension StaticString {
+
+	func ranges(of text: String) -> Set<Range<String.Index>> {
+		var ranges = Set<Range<String.Index>>()
+		var range: Range<String.Index>?
+		while let next = description.range(of: text, options: .literal, range: range, locale: nil) {
+			ranges.insert(next)
+			range = Range(uncheckedBounds: (lower: next.upperBound, upper: description.endIndex))
+		}
+		return ranges
+	}
+
+	var replacementRanges: (private: Set<Range<String.Index>>, all: Set<Range<String.Index>>) {
+		let privates = ranges(of: "%{private}@")
+		var all = privates
+		all.formUnion(ranges(of: "%{public}@"))
+		all.formUnion(ranges(of: "%d"))
+		all.formUnion(ranges(of: "%ld"))
+		return (private: privates, all: all)
 	}
 }
 
@@ -71,7 +117,7 @@ extension LogManager: CoreLoggingService {
 	public func debug(_ message: StaticString, _ args: CVarArg...) {
 		guard configurationProvider.supportedLogLevels.contains(.debug) else { return }
 		guard #available(iOS 10.0, macOS 10.12.0, tvOS 10.0, watchOS 3.0, *) else {
-			logAsLegacy(.debug, message)
+			logAsLegacy(.debug, message, args)
 			return
 		}
 		// os_log() does not support being wrapped in another function, use open-source code to add this capability
@@ -84,7 +130,7 @@ extension LogManager: CoreLoggingService {
 	public func log(_ level: CoreLogLevel, _ message: StaticString, _ args: CVarArg...) {
 		guard configurationProvider.supportedLogLevels.contains(level) else { return }
 		guard #available(iOS 10.0, macOS 10.12.0, tvOS 10.0, watchOS 3.0, *) else {
-			logAsLegacy(.debug, message)
+			logAsLegacy(level, message, args)
 			return
 		}
 		// os_log() does not support being wrapped in another function, use open-source code to add this capability
