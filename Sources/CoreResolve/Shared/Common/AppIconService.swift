@@ -100,7 +100,7 @@ public class AppIconManager: AppIconService {
 			return image
 		case .alternate(let name):
 			guard let image = Image(named: name, in: bundle, compatibleWith: nil) else {
-				fatalError()
+				fatalError("Cannot find image named \(name)")
 			}
 			return image
 		}
