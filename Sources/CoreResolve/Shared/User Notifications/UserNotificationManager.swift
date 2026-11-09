@@ -78,7 +78,7 @@ extension UserNotificationManager: UNUserNotificationCenterDelegate {
 	}
 	
 	public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-		completionHandler([.alert, .badge, .sound])
+		completionHandler([.banner, .list, .badge, .sound])
 	}
 }
 
@@ -161,19 +161,11 @@ extension UNNotificationCategory {
 	public convenience init(from category: CoreNotification.Category) {
 		let actions = category.actions.map { UNNotificationAction(from: $0) }
 		let options = UNNotificationCategoryOptions(from: category.options)
-		#if targetEnvironment(macCatalyst) // This is equivalent to iOS 13+
-			self.init(identifier: category.identifier, actions: actions, intentIdentifiers: category.intentIdentifiers, hiddenPreviewsBodyPlaceholder: category.hiddenPreviewsBodyPlaceholder, categorySummaryFormat: category.categorySummaryFormat, options: options)
-		#elseif os(watchOS)
-			self.init(identifier: category.identifier, actions: actions, intentIdentifiers: category.intentIdentifiers, options: options)
-		#else
-			if #available(iOS 12.0, *) {
-				self.init(identifier: category.identifier, actions: actions, intentIdentifiers: category.intentIdentifiers, hiddenPreviewsBodyPlaceholder: category.hiddenPreviewsBodyPlaceholder, categorySummaryFormat: category.categorySummaryFormat, options: options)
-			} else if #available(iOS 11.0, *), let hiddenPreviewsBodyPlaceholder = category.hiddenPreviewsBodyPlaceholder {
-				self.init(identifier: category.identifier, actions: actions, intentIdentifiers: category.intentIdentifiers, hiddenPreviewsBodyPlaceholder: hiddenPreviewsBodyPlaceholder, options: options)
-			} else {
-				self.init(identifier: category.identifier, actions: actions, intentIdentifiers: category.intentIdentifiers, options: options)
-			}
-		#endif
+        #if os(watchOS)
+        self.init(identifier: category.identifier, actions: actions, intentIdentifiers: category.intentIdentifiers, options: options)
+        #else
+        self.init(identifier: category.identifier, actions: actions, intentIdentifiers: category.intentIdentifiers, hiddenPreviewsBodyPlaceholder: category.hiddenPreviewsBodyPlaceholder, categorySummaryFormat: category.categorySummaryFormat, options: options)
+        #endif
 	}
 }
 

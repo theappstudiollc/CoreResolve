@@ -19,7 +19,16 @@
 //
 
 import CoreData
+import CoreResolve_ObjC
 
+/// Transaction calls and edits must run on this context's queue via perform/performAndWait
+/// (or directly on the main queue for a main-queue context). Any undo manager supplied
+/// for restoration must obey the same confinement, including its targets and actions.
+///
+/// CRKManagedObjectContext bridges UndoManager calls because Swift declares UndoManager
+/// MainActor-isolated, while these transactions also support private-queue contexts.
+/// The bridge does not dispatch or synchronize; callers must preserve context-queue
+/// confinement and must not use main-actor-only undo handlers on private contexts.
 extension NSManagedObjectContext: CoreTransactionProviding {
 	
 	/// `NSManagedObjectContexts` use an `UndoManager` for their transaction contexts
@@ -29,23 +38,23 @@ extension NSManagedObjectContext: CoreTransactionProviding {
 	@discardableResult public func beginTransaction() -> TransactionContext? {
 		let result = undoManager
 		if undoManager == nil {
-			undoManager = UndoManager()
+			undoManager = CRKManagedObjectContext.contextUndoManager()
 		}
-		undoManager!.beginUndoGrouping()
+		CRKManagedObjectContext.beginContextUndoGrouping(undoManager!)
 		return result
 	}
 	
 	/// Cancels a transaction. Does nothing if a transaction was not begun
 	public func cancelTransaction() {
 		guard let undoManager = undoManager else { return }
-		undoManager.endUndoGrouping()
-		undoManager.undo()
+		CRKManagedObjectContext.endContextUndoGrouping(undoManager)
+		CRKManagedObjectContext.undoContextChanges(undoManager)
 	}
 	
 	/// Commits a transaction, and throws an error if the transaction could not be committed. It should be safe to commit a transaction without first beginning one
 	public func commitTransaction() throws {
 		if let undoManager = undoManager {
-			undoManager.endUndoGrouping()
+			CRKManagedObjectContext.endContextUndoGrouping(undoManager)
 		}
 		try save()
 	}

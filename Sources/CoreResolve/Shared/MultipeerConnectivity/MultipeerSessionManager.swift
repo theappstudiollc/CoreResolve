@@ -101,6 +101,7 @@ internal class MultipeerSessionManager {
 	}
 	
 	let messageDecoder: CoreDecoding
+	var certificateValidationHandler: (([Any]?, MCPeerID) -> Bool)?
 	let messageEncoder: CoreEncoding
 	var pendingResourceURLs = [UUID : URL]()
 	var pendingMessagePayloads = [UUID : MultipeerMessagePayload]()

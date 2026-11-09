@@ -128,14 +128,14 @@ final class CoreAsynchronousOperationTests: XCTestCase {
 
 // MARK: - Subject classes
 
-fileprivate class TestOperation: CoreAsynchronousOperation {
+fileprivate class TestOperation: CoreAsynchronousOperation, @unchecked Sendable {
 	
 	override func main() {
 		finish()
 	}
 }
 
-fileprivate class BasicOperation: ParameterOperation {
+fileprivate class BasicOperation: ParameterOperation, @unchecked Sendable {
 	
 	weak var mainExpectation: XCTestExpectation?
 	
@@ -150,7 +150,7 @@ fileprivate class BasicOperation: ParameterOperation {
 	}
 }
 
-fileprivate class DeinitOperation: TestOperation {
+fileprivate class DeinitOperation: TestOperation, @unchecked Sendable {
 	
 	weak var deinitExpectation: XCTestExpectation?
 	
@@ -164,7 +164,7 @@ fileprivate class DeinitOperation: TestOperation {
 	}
 }
 
-fileprivate class ParameterOperation: TestOperation {
+fileprivate class ParameterOperation: TestOperation, @unchecked Sendable {
 	
 	public var parameter: Int = 0
 	private var parameterValue: Int = 0

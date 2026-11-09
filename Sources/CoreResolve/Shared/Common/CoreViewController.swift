@@ -139,6 +139,7 @@ open class CoreViewController: ViewController, CorePrintsSupporting {
 		return retVal
 	}
 
+	@available(iOS, introduced: 6.0, deprecated: 13.0)
 	@available(macCatalyst, deprecated: 13.0)
 	open override func canPerformUnwindSegueAction(_ action: Selector, from fromViewController: UIViewController, withSender sender: Any) -> Bool {
 		let retVal = super.canPerformUnwindSegueAction(action, from: fromViewController, withSender: sender)

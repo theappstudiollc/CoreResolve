@@ -114,23 +114,17 @@ public final class VideoPlayerView: View {
 			return
 		}
 		let pendingAsset = AVURLAsset(url: videoUrl, options: options)
-		pendingAsset.loadValuesAsynchronously(forKeys: ["tracks"]) {
-			DispatchQueue.runInMain {
-				var error: NSError? = nil
-				let loaded = pendingAsset.statusOfValue(forKey: "tracks", error: &error) == .loaded
-				if loaded /*, pendingAsset.tracks(withMediaType: .video).contains(where: { $0.naturalSize != .zero })*/ {
-					self.asset = pendingAsset
-				} else {
-					self.asset = nil
-				}
-				if let completion = completion {
-					completion(loaded, error)
-				}
-				if let error = error {
-					self.notifyError(error)
-				}
-			}
-		}
+        Task { @MainActor in
+            do {
+                _ = try await pendingAsset.load(.tracks)
+                self.asset = pendingAsset
+                completion?(true, nil)
+            } catch {
+                self.asset = nil
+                completion?(false, error)
+                self.notifyError(error)
+            }
+        }
 	}
 	
 	// MARK: - ViewController overrides

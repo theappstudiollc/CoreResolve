@@ -28,6 +28,16 @@ public final class MultipeerMessageManager {
 	
 	/// The DispatchQueue for all completion handlers and delegate methods. Defaults to the Main queue if none is specified
 	public var callbackQueue: DispatchQueue?
+
+    /// Synchronous trust decision for a peer's certificate, called on the session's delegate queue.
+    /// Set before connecting a session; do not change it concurrently with session callbacks.
+    /// A nil handler preserves the existing behavior of accepting every peer, including peers
+    /// without certificates. A custom handler must explicitly decide how to handle nil certificates
+    /// and should validate an independently trusted identity rather than a peer's display name.
+    /// This policy does not configure transport encryption or invitation acceptance.
+    public var certificateValidationHandler: (([Any]?, MCPeerID) -> Bool)? {
+        didSet { sessionManager?.certificateValidationHandler = certificateValidationHandler }
+    }
 	
 	/// The delegate to handle events from the MultipeerMessageManager
 	public weak var delegate: MultipeerMessageManagerDelegate?
@@ -43,6 +53,7 @@ public final class MultipeerMessageManager {
 		set {
 			if let session = newValue {
 				sessionManager = MultipeerSessionManager(sessionProvider: session, delegate: self)
+				sessionManager?.certificateValidationHandler = certificateValidationHandler
 			} else {
 				sessionManager = nil
 			}

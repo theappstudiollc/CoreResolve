@@ -60,7 +60,7 @@ public extension CoreBeaconIdentityConstraint {
 	}
 	
 	@available(iOS, deprecated: 13.0)
-	@available(macOS 10.15, *)
+	@available(macOS, introduced: 10.15, deprecated: 10.15)
 	init(region: CLBeaconRegion) {
 		self.init(uuid: region.proximityUUID, major: region.major?.uint16Value, minor: region.minor?.uint16Value)
 	}
@@ -81,7 +81,7 @@ public extension CoreBeaconIdentityConstraint {
 	}
 	
 	@available(iOS, deprecated: 13.0)
-	@available(macOS 10.15, *)
+	@available(macOS, introduced: 10.15, deprecated: 10.15)
 	var region: CLBeaconRegion {
 		switch (major, minor) {
 		case (.some(let majorValue), .some(let minorValue)):

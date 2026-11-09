@@ -51,8 +51,8 @@ public final class FileStoreManager: CoreFileStoreService {
 	/// - Throws: Throws a CoreFileStoreServiceError or Foundation error
 	public func ensureDirectoryExists(for directoryType: CoreFileStoreDirectoryType, withSubpath subpath: String? = nil) throws {
 		switch directoryType {
-		case .documents:
-			return // This directory is already created by the OS
+		case .documents where subpath?.isEmpty ?? true:
+			return // The OS creates Documents itself, but subdirectories must be created below
 		default:
 			var directoryUrl = try self.directoryUrl(for: directoryType)
 			if let subpath = subpath, subpath.count > 0 {

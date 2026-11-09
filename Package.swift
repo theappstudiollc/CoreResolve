@@ -7,7 +7,7 @@ let package = Package(
     name: "CoreResolve",
 	defaultLocalization: "en",
 	platforms: [
-		.macOS(.v10_12), .iOS(.v9), .tvOS(.v10), .watchOS(.v3)
+		.macOS("12.0"), .iOS("16.0"), .tvOS("16.0"), .watchOS("9.0")
 	],
     products: [
         .library(
@@ -20,14 +20,12 @@ let package = Package(
         .target(
             name: "CoreResolve",
             dependencies: ["CoreResolve_ObjC"],
-			resources: [
-				.process("Resources/CoreAPIError.strings"),
-				.process("Resources/CoreDataStackError.strings"),
-				.process("Resources/CoreFactoryServiceError.strings"),
-				.process("Resources/CoreFileStoreServiceError.strings"),
-				.process("Resources/CoreServiceProvidingError.strings"),
-				.process("Resources/MultipeerMessageManagerError.strings")
-			]),
+            path: ".",
+            exclude: ["Tests", "Sources/CoreResolve_ObjC", "README.md"],
+            sources: ["Sources/CoreResolve"],
+            resources: [
+                .process("Resources")
+            ]),
 		.testTarget(
 			name: "CoreResolveTests",
 			dependencies: ["CoreResolve"])

@@ -23,3 +23,4 @@
 // In this header, you should import all the public headers of your framework using statements like #import <CoreResolve_ObjC/PublicHeader.h>
 #import "CRKCloudKit.h" // Only use this with Xcode 12 and higher
 #import "CRKObjectiveC.h"
+#import "CRKManagedObjectContext.h"

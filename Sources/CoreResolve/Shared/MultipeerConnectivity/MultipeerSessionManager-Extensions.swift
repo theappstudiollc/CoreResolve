@@ -65,7 +65,7 @@ extension MultipeerSessionManager: MultipeerSessionProvidingDelegate {
 	}
 	
 	public func sessionProvider(_ sessionProvider: MultipeerSessionProviding, didReceiveCertificate certificate: [Any]?, fromPeer peerID: MCPeerID, certificateHandler: @escaping (Bool) -> Void) {
-		certificateHandler(true)
+		certificateHandler(certificateValidationHandler?(certificate, peerID) ?? true)
 	}
 	
 	public func sessionProvider(_ sessionProvider: MultipeerSessionProviding, peer peerID: MCPeerID, didChange state: MCSessionState) {

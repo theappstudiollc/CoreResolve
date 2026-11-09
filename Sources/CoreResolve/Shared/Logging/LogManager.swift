@@ -33,6 +33,12 @@ public final class LogManager {
 		self.configurationProvider = configurationProvider
 	}
 	
+	// Retain the shim to forward the existing format, per-argument privacy, va_list,
+	// and caller address. Public logging APIs are not a drop-in replacement.
+	// Swift 6.4+ permits declaration-scoped suppression; older compilers still warn.
+	#if compiler(>=6.4)
+	@diagnose(DeprecatedDeclaration, as: ignored, reason: "Preserve format, privacy, variadic arguments, and caller attribution through the logging shim")
+	#endif
 	@available(iOS 10.0, macOS 10.12.0, tvOS 10.0, watchOS 3.0, *)
 	private func logAsConfigured(_ level: CoreLogLevel, _ returnAddress: UnsafeRawPointer?, dso: UnsafeRawPointer = #dsohandle, _ message: StaticString, _ args: CVaListPointer) {
 		
@@ -114,6 +120,10 @@ fileprivate extension StaticString {
 // MARK: - `CoreLoggingService` support
 extension LogManager: CoreLoggingService {
 	
+	// Capture the caller address here; moving the shim into another helper changes its scope.
+	#if compiler(>=6.4)
+	@diagnose(DeprecatedDeclaration, as: ignored, reason: "Retain caller-address capture for the existing logging wrapper")
+	#endif
 	public func debug(_ message: StaticString, _ args: CVarArg...) {
 		guard configurationProvider.supportedLogLevels.contains(.debug) else { return }
 		guard #available(iOS 10.0, macOS 10.12.0, tvOS 10.0, watchOS 3.0, *) else {
@@ -127,6 +137,10 @@ extension LogManager: CoreLoggingService {
 		}
 	}
 	
+	// Keep caller-address capture at this entry point for the same reason as debug(_:_:).
+	#if compiler(>=6.4)
+	@diagnose(DeprecatedDeclaration, as: ignored, reason: "Retain caller-address capture for the existing logging wrapper")
+	#endif
 	public func log(_ level: CoreLogLevel, _ message: StaticString, _ args: CVarArg...) {
 		guard configurationProvider.supportedLogLevels.contains(level) else { return }
 		guard #available(iOS 10.0, macOS 10.12.0, tvOS 10.0, watchOS 3.0, *) else {

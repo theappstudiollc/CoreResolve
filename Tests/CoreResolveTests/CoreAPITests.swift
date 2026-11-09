@@ -97,7 +97,8 @@ final class CoreAPITests: XCTestCase {
 	func testMakeRequestFailure() throws {
 		
 		let container = setupStandardContainer()
-		let operation = TestAPIOperation(urlString: "bad url")
+		// A space is now percent-encoded by URL(string:); an invalid IPv6 host still fails parsing.
+		let operation = TestAPIOperation(urlString: "https://[invalid")
 		
 		MockURLProtocol.setDefaultRequestHandler()
 		let finishExpectation = expectation(description: "Calls finish")
@@ -147,7 +148,7 @@ fileprivate class TestAPIRequest: CoreAPIRequest {
 	}
 }
 
-fileprivate class TestAPIOperation: MockCoreAPIOperation<TestAPIRequest> {
+fileprivate class TestAPIOperation: MockCoreAPIOperation<TestAPIRequest>, @unchecked Sendable {
 	
 	let urlString: String
 

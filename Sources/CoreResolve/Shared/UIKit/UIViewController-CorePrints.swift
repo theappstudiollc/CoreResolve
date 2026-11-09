@@ -131,7 +131,7 @@ internal extension UIViewController {
 		LogManager.viewControllerLayout.debug("%{public}@ viewDidLayoutSubviews()", debugDescription)
 	}
 	
-	@available(iOS 11.0, tvOS 11.0, *)
+	@available(iOS 11.0, macCatalyst 13.1, tvOS 11.0, *)
 	func printsViewSafeAreaInsetsDidChange() {
 		guard self is CorePrintsViewControllerLayout else { return }
 		LogManager.viewControllerLayout.debug("%{public}@ viewSafeAreaInsetsDidChange = %{public}@ => %{public}@", debugDescription, "\(additionalSafeAreaInsets)", "\(view.safeAreaInsets)")

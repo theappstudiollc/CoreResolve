@@ -18,7 +18,12 @@
 //  limitations under the License.
 //
 
-/// Resolves services on demand and manages their lifetime
+/// Resolves services on demand and manages their lifetime.
+///
+/// Access is synchronized by the caller. Confine all registration, resolution, and release calls
+/// to one thread or serial queue, or protect them with a shared lock. Resolution mutates cached
+/// references even when a service is already loaded. If initializers resolve other services through
+/// the same manager, any caller-provided lock must support recursive acquisition.
 public final class ServiceManager {
 	
 	/// It's your job to decide what type ServiceIdentifier should be -- and always stick to it
@@ -83,7 +88,6 @@ public final class ServiceManager {
 	/// - Parameter serviceIdentifier: The ServiceIdentifier for which to resolve the service
 	/// - Returns: Returns an instance of the service if it is still loaded
 	public func resolveServiceIfLoaded(withIdentifier serviceIdentifier: ServiceIdentifier) -> Any? {
-		// TODO: Use a DispatchQueue to protect access
 		guard let weakReference = resolvedServices[serviceIdentifier] else { return nil }
 		return weakReference()
 	}
@@ -91,7 +95,6 @@ public final class ServiceManager {
 	// MARK: - Private properties and methods
 	
 	private func cacheResolvedService(_ service: Any, using identifier: ServiceIdentifier) {
-		// TODO: Use a DispatchQueue to protect access
 		switch service {
 		case let serviceClass as AnyObject:
 			resolvedServices[identifier] = { [weak serviceClass] in serviceClass }

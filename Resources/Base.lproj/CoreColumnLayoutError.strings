@@ -18,6 +18,6 @@
  limitations under the License.
 */
 
-"columnLayoutProvidingNotAvailable.errorDescription" = "The ColumnLayoutProviding instance is not available"
+"columnLayoutProvidingNotAvailable.errorDescription" = "The ColumnLayoutProviding instance is not available";
 
-"invalidColumnSpecified.errorDescription" = "The specified column index does not exist for the `CoreColumnLayoutProviding` instance"
+"invalidColumnSpecified.errorDescription" = "The specified column index does not exist for the `CoreColumnLayoutProviding` instance";

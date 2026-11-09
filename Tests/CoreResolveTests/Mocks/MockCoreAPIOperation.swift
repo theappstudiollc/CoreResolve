@@ -24,7 +24,7 @@ public enum MockCoreAPIOperationError: Error {
 	case missingGenerateRequestDataHandler
 }
 
-open class MockCoreAPIOperation<APIRequest>: CoreAPIOperation<APIRequest> where APIRequest: CoreAPIRequest {
+open class MockCoreAPIOperation<APIRequest>: CoreAPIOperation<APIRequest>, @unchecked Sendable where APIRequest: CoreAPIRequest {
 	
 	open var handleCancel = { }
 	open var handleFinish = { }

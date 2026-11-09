@@ -43,7 +43,7 @@ public extension CLLocationCoordinate2D {
 	}
 }
 
-extension CLLocationCoordinate2D: Equatable, Hashable { // So that we can use CLLocationCoordinate2D as keys in a Dictionary
+extension CLLocationCoordinate2D: @retroactive Equatable, @retroactive Hashable { // So that we can use CLLocationCoordinate2D as keys in a Dictionary
 	
 	public static func == (left: CLLocationCoordinate2D, right: CLLocationCoordinate2D) -> Bool {
 		return left.latitude == right.latitude && left.longitude == right.longitude

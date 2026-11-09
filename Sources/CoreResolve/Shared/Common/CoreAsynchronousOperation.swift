@@ -25,9 +25,14 @@ import Foundation
 public protocol CoreAsynchronousOperationLinking { }
 
 /// Operation subclass that is explicitly asynchronous and supports operation bridging
-open class CoreAsynchronousOperation: Operation, CoreAsynchronousOperationLinking {
+open class CoreAsynchronousOperation: Operation, CoreAsynchronousOperationLinking, @unchecked Sendable {
 	
 	// MARK: - Public methods
+
+    public override init() {
+        queue = DispatchQueue(label: "\(type(of: self)).queue", attributes: .concurrent)
+        super.init()
+    }
 
 	/// Call sometime after `main` to complete the operation. All paths, including cancellation, must lead to finish, otherwise the operation will forever consume its operation queue. This class' implementation of `start` already calls `finish` if the operation is cancelled before it begins
 	open func finish() {
@@ -90,7 +95,7 @@ open class CoreAsynchronousOperation: Operation, CoreAsynchronousOperationLinkin
 	internal var finishClosures: [FinishClosure]?
 	
 	/// Concurrent queue for synchronizing access to `state` and `finishClosures`
-	fileprivate let queue = DispatchQueue(label: "\(type(of: self)).queue", attributes: .concurrent)
+	fileprivate let queue: DispatchQueue
 	
 	/// Private backing store for `state`
 	private var _state: State = .ready

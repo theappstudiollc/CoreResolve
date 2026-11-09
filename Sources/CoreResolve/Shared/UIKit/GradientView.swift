@@ -18,7 +18,7 @@
 //  limitations under the License.
 //
 
-#if canImport(UIKit) && canImport(QuartzCore)
+#if canImport(UIKit) && canImport(QuartzCore) && !os(watchOS)
 
 import QuartzCore
 import UIKit

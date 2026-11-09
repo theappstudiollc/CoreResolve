@@ -34,11 +34,9 @@ internal struct CoreDataContextPool {
 	}
 	
 	public mutating func next(_ create: () -> NSManagedObjectContext) -> NSManagedObjectContext {
-		for _ in 0 ..< size {
-			indexPointer = (indexPointer + 1) % size
-			if let retVal = pool[indexPointer]() {
-				return retVal
-			}
+		indexPointer = (indexPointer + 1) % size
+		if let retVal = pool[indexPointer]() {
+			return retVal
 		}
 		let retVal = create()
 		pool[indexPointer] = { [weak retVal] in retVal }

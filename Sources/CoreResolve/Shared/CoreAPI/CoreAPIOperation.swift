@@ -18,7 +18,7 @@
 //  limitations under the License.
 //
 
-open class CoreAPIOperation<APIRequest>: CoreAsynchronousOperation where APIRequest: CoreAPIRequest {
+open class CoreAPIOperation<APIRequest>: CoreAsynchronousOperation, @unchecked Sendable where APIRequest: CoreAPIRequest {
 	
 	public typealias CoreAPIRequestTaskResult = Result<APIRequest.ResponseDataType, CoreAPIError>
 	

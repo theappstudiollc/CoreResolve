@@ -30,6 +30,7 @@ import QuartzCore
 }
 
 /// A CALayer that supports the Parallaxable protocol
+@available(watchOS, unavailable)
 public final class ParallaxProxyLayer: CALayer, Parallaxable {
 	
 	/// The amount of shift with which to apply the Parallax effect

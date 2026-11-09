@@ -195,12 +195,14 @@ internal final class CoreLocationProvidingDelegateProxy: NSObject, CLLocationMan
 		visitDelegate.locationProvider(manager, didVisit: visit)
 	}
 	
+	@available(iOS, deprecated: 13.0)
 	func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
 		guard let beaconDelegate = delegate as? CoreLocationBeaconProvidingDelegate else { return }
 		let constraint = CoreBeaconIdentityConstraint(region: region)
 		beaconDelegate.locationProvider(manager, didRangeBeacons: beacons, with: constraint)
 	}
 	
+	@available(iOS, deprecated: 13.0)
 	func locationManager(_ manager: CLLocationManager, rangingBeaconsDidFailFor region: CLBeaconRegion, withError error: Error) {
 		guard let beaconDelegate = delegate as? CoreLocationBeaconProvidingDelegate else { return }
 		let constraint = CoreBeaconIdentityConstraint(region: region)

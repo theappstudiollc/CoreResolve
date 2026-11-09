@@ -117,7 +117,7 @@ extension CoreVerticalLayoutAnchorable {
 /// Represents a class that can provide anchors with which to apply AutoLayout constraints
 public protocol CoreLayoutAnchorable: CoreHorizontalLayoutAnchorable, CoreVerticalLayoutAnchorable {
 
-	@available(iOS 11, macOS 11, tvOS 11, *)
+	@available(iOS 11, macOS 11, macCatalyst 13.1, tvOS 11, *)
 	/// The insets that you use to determine the safe area for this `CoreLayoutAnchorable`.
 	var safeAreaInsets: EdgeInsets { get }
 }
@@ -155,7 +155,7 @@ extension CoreLayoutAnchorable {
 // MARK: - Marks LayoutGuide as `CoreLayoutAnchorable`
 extension LayoutGuide: CoreLayoutAnchorable {
 
-	@available(iOS 11, macOS 11, tvOS 11, *)
+	@available(iOS 11, macOS 11, macCatalyst 13.1, tvOS 11, *)
 	public var safeAreaInsets: EdgeInsets {
 		guard let owningView = owningView else { return .zero }
 		return owningView.safeAreaInsets

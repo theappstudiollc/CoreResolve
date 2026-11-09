@@ -20,7 +20,10 @@
 
 import CoreData
 
-/// Base implementation of CoreDataStack that support a main-thread NSManagedObjectContext and 0 or more background-thread NSManagedObjectContexts
+/// Base implementation of CoreDataStack that supports a main-thread NSManagedObjectContext and 0 or more background-thread NSManagedObjectContexts.
+///
+/// Intended for one stack instance per application. Contexts are cached per thread using a shared
+/// thread-dictionary key, so multiple independent stack instances in the same application are not supported.
 open class MultiContextCoreDataStack {
 	
 	let configurationProvider: CoreDataStackConfigurationProviding
