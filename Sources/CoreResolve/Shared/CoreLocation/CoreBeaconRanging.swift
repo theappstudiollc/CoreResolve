@@ -80,8 +80,7 @@ public extension CoreBeaconIdentityConstraint {
 		}
 	}
 	
-	@available(iOS, deprecated: 13.0)
-	@available(macOS, introduced: 10.15, deprecated: 10.15)
+	@available(macOS, introduced: 10.15)
 	var region: CLBeaconRegion {
 		guard #available(iOS 13.0, macOS 10.15, *) else {
 			switch (major, minor) {
