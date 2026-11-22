@@ -83,14 +83,17 @@ public extension CoreBeaconIdentityConstraint {
 	@available(iOS, deprecated: 13.0)
 	@available(macOS, introduced: 10.15, deprecated: 10.15)
 	var region: CLBeaconRegion {
-		switch (major, minor) {
-		case (.some(let majorValue), .some(let minorValue)):
-			return CLBeaconRegion(proximityUUID: uuid, major: majorValue, minor: minorValue, identifier: regionIdentifier)
-		case (.some(let majorValue), _):
-			return CLBeaconRegion(proximityUUID: uuid, major: majorValue, identifier: regionIdentifier)
-		default:
-			return CLBeaconRegion(proximityUUID: uuid, identifier: regionIdentifier)
+		guard #available(iOS 13.0, macOS 10.15, *) else {
+			switch (major, minor) {
+			case (.some(let majorValue), .some(let minorValue)):
+				return CLBeaconRegion(proximityUUID: uuid, major: majorValue, minor: minorValue, identifier: regionIdentifier)
+			case (.some(let majorValue), _):
+				return CLBeaconRegion(proximityUUID: uuid, major: majorValue, identifier: regionIdentifier)
+			default:
+				return CLBeaconRegion(proximityUUID: uuid, identifier: regionIdentifier)
+			}
 		}
+		return CLBeaconRegion(beaconIdentityConstraint: identityConstraint, identifier: regionIdentifier)
 	}
 	
 	var regionIdentifier: String {
